@@ -2,26 +2,27 @@
 #          DVR833
 #   BIN1, BIN2, AIN1, AIN2 = PWM (0 - 65535) mapping
 
-__auther__ = Terry C.
-__version__ = 1.0
+#__author__ = Terry C.
+#__version__ = 1.0
 
-from machine import Pin, PWN
+from machine import Pin, PWM
 
 def map(value, minX, minY, maxX, maxY):
-    return int(value - minX)*(maxY-maxX)/(minY-minX)+maxY)
+    total=value-minX*(maxY-maxX)/(minY-minX)+maxY
+    return int(total)
 
 class drv8833:
    def __init__(self, AIN1, AIN2, BIN1, BIN2, freq=100000):
-       self.AIM1 = AIN1
+       self.AIN1 = AIN1
        self.AIN2 = AIN2
        self.BIN1 = BIN1
        self.BIN2 = BIN2
        self.freq = freq
 
-       self.a1_motor = PWN(Pin(self.AIM1))
-       self.a2_motor = PWM(Pin(self.AIM2))
-       self.b1_motor = PWN(Pin(self.BIM1))
-       self.b2_motor = PWN(Pin(self.BIM2))
+       self.a1_motor = PWM(Pin(self.AIN1))
+       self.a2_motor = PWM(Pin(self.AIN2))
+       self.b1_motor = PWM(Pin(self.BIN1))
+       self.b2_motor = PWM(Pin(self.BIN2))
 
        self.a1_motor.freq(self.freq)
        self.a2_motor.freq(self.freq)
@@ -33,7 +34,7 @@ class drv8833:
       if dirct==0:
           self.a1_motor.duty_u16(speed)
           self.a2_motor.duty_u16(0)
-      elif direct==1:
+      elif dirct==1:
           self.a1_motor.duty_u16(0)
           self.a2_motor.duty_u16(speed)
       else:

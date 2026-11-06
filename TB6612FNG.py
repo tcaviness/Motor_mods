@@ -13,13 +13,14 @@
 #    L	L	H	OFF	OFF	Stop
 #
 
-__auther__ = Terry C.
-__version__ = 1.0
+#__auther__ = Terry C.
+#__version__ = 1.0
 
-from machine import Pin, PWN
+from machine import Pin, PWM
 
 def map(value, minX, minY, maxX, maxY):
-    return int(value - minX)*(maxY-maxX)/(minY-minX)+maxY)
+    total=value-minX*(maxY-maxX)/(minY-minX)+maxY
+    return int(total)
 
 class tb6612xx:
    def __init__(self, AIN1, AIN2, BIN1, BIN2, STBY, PWMA=None, PWMB=None, freq=100000):
@@ -44,8 +45,8 @@ class tb6612xx:
            self.speed_B = None
            self.freq=None
        else:
-           self.speed_A = PWN(Pin(self.PWMA))
-           self.speed_B = PWN(Pin(self.PWMB))
+           self.speed_A = PWM(Pin(self.PWMA))
+           self.speed_B = PWM(Pin(self.PWMB))
            self.speed_A.freq(self.freq)
            self.speed_B.freq(self.freq)
 
@@ -137,3 +138,4 @@ class tb6612xx:
           self.chiptoff.value(1)
       else:
           self.chiptoff.value(0)
+

@@ -1,4 +1,3 @@
-
 #
 #         DVR8835 (MODE 1) if function
 #  BENBL, AENBL = PWM (0 - 65535) mapping
@@ -7,13 +6,14 @@
 #                 (MODE 2) else
 #  AIN1, AIN2, BIN1, BIN2 = PWM (0 - 65535) (DEFALTS IF MODE IS NOT HIGH) mapping
 #
-__auther__ = Terry C.
-__version__ = 1.0
+# __auther__ = Terry C.
+# __version__ = 1.0
 
-from machine import Pin, PWN
+from machine import Pin, PWM
 
 def map(value, minX, minY, maxX, maxY):
-    return int(value - minX)*(maxY-maxX)/(minY-minX)+maxY)
+    total=value-minX*(maxY-maxX)/(minY-minX)+maxY
+    return int(total)
 
 class dvr8835:
    def __init__(self,AIN1, AIN2, BIN1, BIN2, Swmode=None, Mode=2, freq=100000):
@@ -24,10 +24,10 @@ class dvr8835:
            self.BIN1 = BIN1
            self.BIN2 = BIN2
 
-           self.motor_a1 = PWN(Pin(self.AIM1))
+           self.motor_a1 = PWM(Pin(self.AIM1))
            self.motor_a2 = PWM(Pin(self.AIM2))
-           self.motor_b1 = PWN(Pin(self.BIM1))
-           self.motor_b2 = PWN(Pin(self.BIM2))
+           self.motor_b1 = PWM(Pin(self.BIM1))
+           self.motor_b2 = PWM(Pin(self.BIM2))
 
            self.motor_b1.freq(self.freq)
            self.motor_b2.freq(self.freq)
@@ -90,6 +90,15 @@ class dvr8835:
       def Backward(self, pw):
           self.MotorA(pw,1)
           self.MotorB(pw,1)
+          
+      def left(self, pw):
+          self.MotorA(pw,0)
+          self.MotorB(pw,1)
+          
+      def right(self, pw):
+          self.MotorA(pw,1)
+          self.MotorB(pw,0)
+          
 
       def stop():
           self.MotorA(0,0)
@@ -100,3 +109,4 @@ class dvr8835:
               self.Mode.value(1)
           elif on == 2:
               self.Mode.value(0)
+
